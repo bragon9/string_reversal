@@ -3,11 +3,14 @@ import argparse
 
 def init_args():
     """Add parser and arguments."""
-    parser = argparse.ArgumentParser(description="Reverse a string.")
+    parser = argparse.ArgumentParser(
+        description="Given a file name, reverses the string contained within \
+                    the file."
+    )
     parser.add_argument(
-        "string",
+        "filename",
         type=str,
-        help="The string to reverse, wrapped in quotes (single or double).",
+        help="The filename containing the string to reverse.",
     )
     parser.add_argument(
         "-r",
@@ -22,6 +25,12 @@ def init_args():
         help="Reverses the string word for word.",
     )
     return parser.parse_args()
+
+
+def get_string_from_file(path):
+    """Return the string in the given file."""
+    with open(path) as file:
+        return file.readline()
 
 
 def reverse_string(s):
@@ -39,7 +48,13 @@ if __name__ == "__main__":
 
     reverse_letters_bool = args.reverse_letters
     reverse_words_bool = args.reverse_words
-    input_str = args.string
+    filename = args.filename
+
+    input_str = get_string_from_file(filename)
+
+    # Only allow one flag
+    if reverse_letters_bool and reverse_words_bool:
+        raise ValueError('Only one flag may be used at a time.')
 
     if reverse_letters_bool:
         print(reverse_string(input_str))
